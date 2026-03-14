@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.schemas.user_schema import UserCreate
 from app.services import user_service
+from app.core.security import get_current_user
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -37,6 +38,10 @@ def update_user(user_id: int, user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found") 
     
     return user_service.update_user(db, db_user, user)
+
+@router.get("/me/protected")
+def protected_route(current_user: str = Depends(get_current_user)):
+    return {"message": "Rota protegida", "user": current_user}
 
 @router.delete("/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
