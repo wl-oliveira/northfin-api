@@ -14,6 +14,10 @@ def get_account_by_id(db: Session, account_id: int, user_id: int):
 
 # Criação de conta bancária
 def create_account(db: Session, account: AccountCreate, user_id: int):
+    accounts = get_all_accounts(db, user_id)
+    if len(accounts) >= 10:
+        raise HTTPException(status_code=400, detail="Limite de 10 contas atingido")
+    
     new_account = Account(
         name=account.name,
         initial_balance=account.initial_balance,
@@ -25,7 +29,7 @@ def create_account(db: Session, account: AccountCreate, user_id: int):
     return new_account
 
 # Função para editar conta bancária
-def uptade_account(db: Session, db_account: Account, account: AccountCreate):
+def update_account(db: Session, db_account: Account, account: AccountCreate):
     db_account.name = account.name
     db_account.initial_balance = account.initial_balance
     db.commit()
