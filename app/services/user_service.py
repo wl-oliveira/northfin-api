@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.user_model import User
 from app.schemas.user_schema import UserCreate
 from app.core.security import get_password_hash
+from app.services.category_service import create_default_categories
 
 # Serviços para manipulação de usuários
 def get_all_users(db: Session):
@@ -33,6 +34,8 @@ def create_user(db: Session, user: UserCreate):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    create_default_categories(db, new_user.id)
     
     return new_user
 
