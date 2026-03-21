@@ -10,6 +10,7 @@ class Account(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     initial_balance = Column(Float, default=0.0)
+    current_balance = Column(Float, default=0.0)
     is_active = Column(Boolean, default=True)
     user_id= Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)

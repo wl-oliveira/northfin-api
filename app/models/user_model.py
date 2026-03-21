@@ -15,3 +15,4 @@ class User(Base):
 
     accounts = relationship("Account", back_populates="owner")
     categories = relationship("Category", back_populates="owner")
+    transactions = relationship("Transaction", back_populates="owner")

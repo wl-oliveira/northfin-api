@@ -11,6 +11,7 @@ class AccountResponse(BaseModel):
     id: int
     name: str
     initial_balance: float
+    current_balance: float
     is_active: bool
     user_id: int
     created_at: datetime

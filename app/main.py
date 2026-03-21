@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from app.routes import users, auth, accounts, categories
+from app.routes import users, auth, accounts, categories, transactions
 from app.database.base import Base
 from app.database.connection import engine
-from app.models import user_model, account_model, category_model
+from app.models import user_model, account_model, category_model, transaction_model
 
 Base.metadata.create_all(bind=engine)
 
@@ -16,6 +16,7 @@ app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(accounts.router)
 app.include_router(categories.router)
+app.include_router(transactions.router)
 
 @app.get("/")
 def home():

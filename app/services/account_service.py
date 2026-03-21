@@ -21,6 +21,7 @@ def create_account(db: Session, account: AccountCreate, user_id: int):
     new_account = Account(
         name=account.name,
         initial_balance=account.initial_balance,
+        current_balance=account.initial_balance,
         user_id=user_id
     )
     db.add(new_account)
