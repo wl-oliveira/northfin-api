@@ -18,8 +18,12 @@ def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email, User.is_active == True).first()
 
 
+def _email_exists(db: Session, email: str) -> bool:
+    return db.query(User).filter(User.email == email).first() is not None
+
+
 def create_user(db: Session, user: UserCreate):
-    if get_user_by_email(db, user.email):
+    if _email_exists(db, user.email):
         raise HTTPException(status_code=400, detail="Email já cadastrado")
 
     new_user = User(

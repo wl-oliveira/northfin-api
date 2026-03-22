@@ -1,20 +1,18 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database.connection import get_db
 from app.schemas.user_schema import UserCreate, UserResponse
 from app.services import user_service
-from app.core.security import get_current_user
+from app.core.security import get_current_active_user
+from app.models.user_model import User
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get("/me", response_model=UserResponse)
-def get_me(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
-    user = user_service.get_user_by_email(db, current_user)
-    if not user:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    return user
+def get_me(current_user: User = Depends(get_current_active_user)):
+    return current_user
 
 
 @router.post("/", response_model=UserResponse)
@@ -23,17 +21,11 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/me", response_model=UserResponse)
-def update_user(user: UserCreate, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
-    db_user = user_service.get_user_by_email(db, current_user)
-    if not db_user:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    return user_service.update_user(db, db_user, user)
+def update_user(user: UserCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
+    return user_service.update_user(db, current_user, user)
 
 
 @router.delete("/me")
-def delete_user(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
-    user = user_service.get_user_by_email(db, current_user)
-    if not user:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    user_service.delete_user(db, user)
+def delete_user(db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
+    user_service.delete_user(db, current_user)
     return {"message": "Usuário deletado com sucesso"}
