@@ -35,13 +35,16 @@ def create_debt(db: Session, debt: DebtCreate, user_id: int):
     return new_debt
 
 def update_debt(db: Session, db_debt: Debt, debt: DebtCreate):
+    db_debt.name = debt.name
     db_debt.due_date = debt.due_date
     db_debt.total_amount = debt.total_amount
+    db_debt.interest_rate = debt.interest_rate
     db_debt.total_installments = debt.total_installments
+    db_debt.is_installment = debt.is_installment
     db_debt.status = debt.status
     db.commit()
     db.refresh(db_debt)
-    return db_debt 
+    return db_debt
 
 def delete_debt(db: Session, debt: Debt):
     debt.is_active = False

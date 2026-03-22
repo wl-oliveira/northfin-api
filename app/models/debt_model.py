@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from app.database.base import Base
-from datetime import datetime
+from datetime import datetime, timezone
 
 class Debt(Base):
     __tablename__ = "debts"
@@ -19,8 +19,8 @@ class Debt(Base):
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     account = relationship("Account")
     owner = relationship("User", back_populates="debts")

@@ -19,7 +19,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from app.database.base import Base
-from app.models import user_model, account_model, category_model, transaction_model
+from app.models import user_model, account_model, category_model, transaction_model, debt_model
 
 target_metadata = Base.metadata
 
