@@ -6,10 +6,6 @@ from app.core.security import get_password_hash
 from app.services.category_service import create_default_categories
 
 
-def get_all_users(db: Session):
-    return db.query(User).filter(User.is_active == True).all()
-
-
 def get_user_by_id(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id, User.is_active == True).first()
 
@@ -44,6 +40,8 @@ def create_user(db: Session, user: UserCreate):
 
 
 def update_user(db: Session, db_user: User, user: UserCreate):
+    if user.email != db_user.email and _email_exists(db, user.email):
+        raise HTTPException(status_code=400, detail="Email já cadastrado")
     db_user.name = user.name
     db_user.email = user.email
     db_user.password = get_password_hash(user.password)

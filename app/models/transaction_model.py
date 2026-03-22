@@ -12,10 +12,10 @@ class Transaction(Base):
     type = Column(String, nullable=False) #income or expense
     amount = Column(Float, nullable=False)
     description = Column(String, nullable=True)
-    date = Column(DateTime, nullable=False)
+    date = Column(DateTime(timezone=True), nullable=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
 
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)

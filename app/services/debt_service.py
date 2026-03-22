@@ -35,6 +35,9 @@ def create_debt(db: Session, debt: DebtCreate, user_id: int):
     return new_debt
 
 def update_debt(db: Session, db_debt: Debt, debt: DebtCreate):
+    if debt.total_installments != db_debt.total_installments:
+        installments_paid = (db_debt.total_installments or 0) - (db_debt.remaining_installments or 0)
+        db_debt.remaining_installments = max(0, (debt.total_installments or 0) - installments_paid)
     db_debt.name = debt.name
     db_debt.due_date = debt.due_date
     db_debt.total_amount = debt.total_amount
