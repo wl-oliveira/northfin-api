@@ -13,6 +13,6 @@ class Account(Base):
     current_balance = Column(Float, default=0.0)
     is_active = Column(Boolean, default=True)
     user_id= Column(Integer, ForeignKey("users.id"), nullable=False)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     owner = relationship("User", back_populates="accounts")

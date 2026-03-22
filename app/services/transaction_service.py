@@ -62,6 +62,7 @@ def create_transaction(db: Session, transaction: TransactionCreate, user_id: int
 def delete_transaction(db: Session, transaction: Transaction):
     account = db.query(Account).filter(
         Account.id == transaction.account_id,
+        Account.user_id == transaction.user_id,
         Account.is_active == True
     ).first()
     if not account:
