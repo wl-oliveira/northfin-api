@@ -53,6 +53,8 @@ def create_category(db: Session, category: CategoryCreate, user_id: int):
     return new_category
 
 def update_category(db: Session, db_category: Category, category: CategoryCreate):
+    if db_category.is_default:
+        raise HTTPException(status_code=400, detail="Categorias padrão não podem ser editadas")
     db_category.name = category.name
     db_category.type = category.type
     db.commit()

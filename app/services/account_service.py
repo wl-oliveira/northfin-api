@@ -30,8 +30,10 @@ def create_account(db: Session, account: AccountCreate, user_id: int):
 
 
 def update_account(db: Session, db_account: Account, account: AccountCreate):
+    balance_diff = account.initial_balance - db_account.initial_balance
     db_account.name = account.name
     db_account.initial_balance = account.initial_balance
+    db_account.current_balance += balance_diff
     db.commit()
     db.refresh(db_account)
     return db_account

@@ -4,7 +4,7 @@ from datetime import datetime
 
 class DebtCreate(BaseModel):
     status:  Literal["open", "paid"]
-    name: str
+    name: str = Field(..., min_length=3, max_length=100)
     total_amount: float = Field(..., gt=0)
     interest_rate: float = Field(..., ge=0)
     is_installment: bool
