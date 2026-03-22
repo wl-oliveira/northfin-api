@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
 
 from app.database.connection import get_db
 from app.schemas.user_schema import UserCreate, UserResponse
@@ -10,14 +9,9 @@ from app.core.security import get_current_user
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/", response_model=List[UserResponse])
-def list_users(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
-    return user_service.get_all_users(db)
-
-
-@router.get("/{user_id}", response_model=UserResponse)
-def get_user(user_id: int, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
-    user = user_service.get_user_by_id(db, user_id)
+@router.get("/me", response_model=UserResponse)
+def get_me(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
+    user = user_service.get_user_by_email(db, current_user)
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     return user
@@ -28,17 +22,17 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return user_service.create_user(db, user)
 
 
-@router.put("/{user_id}", response_model=UserResponse)
-def update_user(user_id: int, user: UserCreate, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
-    db_user = user_service.get_user_by_id(db, user_id)
+@router.put("/me", response_model=UserResponse)
+def update_user(user: UserCreate, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
+    db_user = user_service.get_user_by_email(db, current_user)
     if not db_user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     return user_service.update_user(db, db_user, user)
 
 
-@router.delete("/{user_id}")
-def delete_user(user_id: int, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
-    user = user_service.get_user_by_id(db, user_id)
+@router.delete("/me")
+def delete_user(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
+    user = user_service.get_user_by_email(db, current_user)
     if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     user_service.delete_user(db, user)

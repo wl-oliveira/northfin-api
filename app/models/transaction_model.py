@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from app.database.base import Base
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Modelo para as transações do usuário
 
@@ -14,8 +14,8 @@ class Transaction(Base):
     description = Column(String, nullable=True)
     date = Column(DateTime, nullable=False)
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
 
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)

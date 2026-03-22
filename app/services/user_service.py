@@ -15,7 +15,7 @@ def get_user_by_id(db: Session, user_id: int):
 
 
 def get_user_by_email(db: Session, email: str):
-    return db.query(User).filter(User.email == email).first()
+    return db.query(User).filter(User.email == email, User.is_active == True).first()
 
 
 def create_user(db: Session, user: UserCreate):

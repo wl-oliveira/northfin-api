@@ -20,7 +20,7 @@ def get_debt(debt_id: int, db: Session = Depends(get_db), current_user: str = De
     user = get_user_by_email(db, current_user)
     debt = debt_service.get_debt_by_id(db, debt_id, user.id)
     if not debt: 
-        raise HTTPException(status_code=404, detail = "Dívida não encontrado")
+        raise HTTPException(status_code=404, detail="Dívida não encontrada")
     return debt
 
 @router.post("/", response_model=DebtResponse)
